@@ -11,6 +11,7 @@ import br.edu.scl.ifsp.sdm.contactlist.model.Contact
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import br.edu.scl.ifsp.sdm.contactlist.adapter.ContactAdapter
 import br.edu.scl.ifsp.sdm.contactlist.model.Constant.EXTRA_CONTACT
 
 
@@ -25,11 +26,8 @@ class MainActivity : AppCompatActivity() {
     private val contactList: MutableList<Contact> = mutableListOf()
 
     //Adapter
-    private val contactAdapter: ArrayAdapter<String> by lazy {
-        ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            contactList.map { it.toString()})
+    private val contactAdapter:ContactAdapter by lazy {
+        ContactAdapter(this, contactList)
     }
 
     private lateinit var carl: ActivityResultLauncher<Intent>
@@ -49,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                         //editar
                 } else {
                     contactList.add(contact)
-                    contactAdapter.add(contact.toString())
+
                 }
                 contactAdapter.notifyDataSetChanged() //e vai notificvar o adaptter dessa modificacao
             }
