@@ -6,8 +6,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.scl.ifsp.sdm.contactlist.databinding.TileContactBinding
 import br.edu.scl.ifsp.sdm.contactlist.model.Contact
+import br.edu.scl.ifsp.sdm.contactlist.view.OnContactClickListener
 
-class ContactRvAdapter (private val contactList: MutableList<Contact>):
+class ContactRvAdapter (
+    private val contactList: MutableList<Contact>,
+    private val onContactClickListener: OnContactClickListener):
+
     RecyclerView.Adapter<ContactRvAdapter.ContactViewHolder>(){
     inner class ContactViewHolder(tileContactBinding: TileContactBinding):
         RecyclerView.ViewHolder(tileContactBinding.root){
@@ -25,6 +29,9 @@ class ContactRvAdapter (private val contactList: MutableList<Contact>):
             with(holder) {
                 nameTv.text = contact.name
                 emailTv.text = contact.email
+                itemView.setOnClickListener {
+                    onContactClickListener.onContactClick(position)
+                }
             }
         }
     }

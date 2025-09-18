@@ -20,9 +20,11 @@ import br.edu.scl.ifsp.sdm.contactlist.adapter.ContactAdapter
 import br.edu.scl.ifsp.sdm.contactlist.adapter.ContactRvAdapter
 import br.edu.scl.ifsp.sdm.contactlist.model.Constant.EXTRA_CONTACT
 import br.edu.scl.ifsp.sdm.contactlist.model.Constant.EXTRA_VIEW_CONTACT
+import br.edu.scl.ifsp.sdm.contactlist.view.ContactActivity
 
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), OnContactClickListener {
     private val amb: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     //Adapter
     private val contactAdapter:ContactRvAdapter by lazy {
-        ContactRvAdapter( contactList)
+        ContactRvAdapter( contactList, this)
     }
 
     private lateinit var carl: ActivityResultLauncher<Intent>
@@ -65,18 +67,8 @@ class MainActivity : AppCompatActivity() {
 
         amb.contactRv.adapter = contactAdapter
         amb.contactRv.layoutManager = LinearLayoutManager(this)
-         //aqui é o click LONGO
 
-        /*amb.contactRv.setOnItemClickListener { _, _, position, _ -> //aqui o click curto
-            startActivity(Intent(this, ContactActivity::class.java).apply {
-                putExtra(EXTRA_CONTACT, contactList[position])
-                putExtra(EXTRA_VIEW_CONTACT, true)
-            }.also {
-                startActivity(it)
-            })
-        }*/
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -131,6 +123,16 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
 
     }
+
+    override fun onContactClick(position: Int) {
+        Intent(this, ContactActivity::class.java).apply {
+            putExtra(EXTRA_CONTACT, contactList[position])
+            putExtra(EXTRA_VIEW_CONTACT, true)
+        }.also {
+            startActivity(it)
+        }
+    }
+
 
 
     private fun fillContacts(){ //aqui vou ter 50 contatos
