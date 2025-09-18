@@ -15,7 +15,9 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.LinearLayoutManager
 import br.edu.scl.ifsp.sdm.contactlist.adapter.ContactAdapter
+import br.edu.scl.ifsp.sdm.contactlist.adapter.ContactRvAdapter
 import br.edu.scl.ifsp.sdm.contactlist.model.Constant.EXTRA_CONTACT
 import br.edu.scl.ifsp.sdm.contactlist.model.Constant.EXTRA_VIEW_CONTACT
 
@@ -29,8 +31,8 @@ class MainActivity : AppCompatActivity() {
     private val contactList: MutableList<Contact> = mutableListOf()
 
     //Adapter
-    private val contactAdapter:ContactAdapter by lazy {
-        ContactAdapter(this, contactList)
+    private val contactAdapter:ContactRvAdapter by lazy {
+        ContactRvAdapter( contactList)
     }
 
     private lateinit var carl: ActivityResultLauncher<Intent>
@@ -61,15 +63,18 @@ class MainActivity : AppCompatActivity() {
 
         fillContacts()
 
-        amb.contactLv.adapter = contactAdapter
-        registerForContextMenu(amb.contactLv) //aqui é o click LONGO
+        amb.contactRv.adapter = contactAdapter
+        amb.contactRv.layoutManager = LinearLayoutManager(this)
+         //aqui é o click LONGO
 
-        amb.contactLv.setOnItemClickListener { _, _, position, _ -> //aqui o click curto
+        /*amb.contactRv.setOnItemClickListener { _, _, position, _ -> //aqui o click curto
             startActivity(Intent(this, ContactActivity::class.java).apply {
                 putExtra(EXTRA_CONTACT, contactList[position])
                 putExtra(EXTRA_VIEW_CONTACT, true)
+            }.also {
+                startActivity(it)
             })
-        }
+        }*/
     }
 
 
@@ -124,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        unregisterForContextMenu(amb.contactLv)
+
     }
 
 
