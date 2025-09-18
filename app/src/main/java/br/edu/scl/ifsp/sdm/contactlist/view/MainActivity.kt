@@ -53,13 +53,16 @@ class MainActivity : AppCompatActivity(), OnContactClickListener {
                     if(contactList.any{it.id == newOrEditedContact.id}){ //se o contato ja esta na lista
                       val position = contactList.indexOfFirst { it.id == newOrEditedContact.id }
                         contactList[position] = newOrEditedContact
+                        contactAdapter.notifyItemChanged(position)
+
                     //editar
                 } else {
                     contactList.add(newOrEditedContact)
+                    contactAdapter.notifyItemInserted(contactList.lastIndex)
+
 
                 }
-                contactAdapter.notifyDataSetChanged() //e vai notificvar o adaptter dessa modificacao
-            }
+                }
             }
         }
 
@@ -85,38 +88,19 @@ class MainActivity : AppCompatActivity(), OnContactClickListener {
         }
     }
 
-    //funcao para ciar o menu de contexto EDIT e REMOVE
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        menuInflater.inflate(R.menu.context_menu_main, menu)
+
+    override fun onRemoveContactMenuItemClick(position: Int) {
+        contactList.removeAt(position)
+        contactAdapter.notifyItemRemoved(position)
+        Toast.makeText(this, "Contact removido", Toast.LENGTH_SHORT).show()
+
     }
 
-    //funcao para tratar o clique no menu de contexto
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        val position = (item.menuInfo as AdapterView.AdapterContextMenuInfo).position
+    override fun onEditContactMenuItemClick(position: Int){
+        carl.launch(Intent(this, ContactActivity::class.java).apply {
+            putExtra(EXTRA_CONTACT, contactList[position])
 
-       return when(item.itemId){
-           R.id.removeContactMi -> {
-               //adcninando a funcionalidade do remove
-               contactList.removeAt(position)
-               contactAdapter.notifyDataSetChanged()
-               Toast.makeText(this, "Contact removido", Toast.LENGTH_SHORT).show()
-               true
-           }
-           R.id.editContactMi -> {
-               //adcninando a funcionalidade do edit
-               carl.launch(Intent(this, ContactActivity::class.java).apply {
-                   putExtra(EXTRA_CONTACT, contactList[position])
-                   putExtra(EXTRA_VIEW_CONTACT, false)
-
-               })
-               true
-           }
-           else -> {false}
-       }
+    })
     }
 
     override fun onDestroy() {
