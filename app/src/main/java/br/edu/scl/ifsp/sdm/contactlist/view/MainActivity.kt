@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity(), OnContactClickListener {
 
 
 
-    private fun fillContacts(){ //aqui vou ter 50 contatos
+    private fun fillContacts(){
         for (i in 1..10) {
             contactList.add(
                 Contact(
